@@ -17,10 +17,9 @@ userRouter.get("/create-user", (req: Request, res: Response) => {
     try {
         res.send(somthing)
     } catch (error) {
-        console.log(error);
         res.status(400).json({
             success: false,
-            message: 'failed to get data'
+            message: ''
         })
     }
 
@@ -40,21 +39,19 @@ courseRouter.post('/create-course', (req: Request, res: Response) => {
 
 
 
-
-
-
-
-
-
-
-
 const logger = (req: Request, res: Response, next: NextFunction) => {
     console.log('middle ware request:', req.url, req.method, req.hostname);
     next()
 }
 
-app.get('/', logger, (req: Request, res: Response) => {
-    res.send('Hello developer!')
+app.get('/', logger, async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        res.send(sothing)
+    } catch (error) {
+        next(error)
+    }
+
 })
 
 app.post('/', logger, (req: Request, res: Response) => {
@@ -62,6 +59,27 @@ app.post('/', logger, (req: Request, res: Response) => {
     res.json({
         message: 'successfully receive data'
     })
+})
+
+
+//custom error
+
+app.all("*", (req: Request, res: Response) => {
+    res.status(400).json({
+        success: false,
+        message: 'rout not found'
+    })
+})
+
+
+//global error handler
+app.use((error: any, req: Request, res: Response, next: NextFunction) => {
+    if (error) {
+        res.status(400).json({
+            success: false,
+            message: 'something went wrong'
+        })
+    }
 })
 
 
